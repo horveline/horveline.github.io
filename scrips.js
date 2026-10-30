@@ -1,54 +1,54 @@
-
-// MENU DE NAVIGATION MOBILE
-
+// NAVIGATION MOBILE ACCESSIBLE
 const menuToggle = document.getElementById("menuToggle");
 const navLinks = document.getElementById("navLinks");
 
-menuToggle.addEventListener("click", () => {
-    navLinks.classList.toggle("active");
-
-    // Modifier le symbole du menu
-    if (navLinks.classList.contains("active")) {
-        menuToggle.textContent = "✕";
-        menuToggle.setAttribute("aria-label", "Fermer le menu");
-    } else {
-        menuToggle.textContent = "☰";
-        menuToggle.setAttribute("aria-label", "Ouvrir le menu");
-    }
-});
-
-// FERMER LE MENU APRÈS AVOIR CLIQUÉ SUR UN LIEN
-
-const navItems = document.querySelectorAll(".nav-links a");
-
-navItems.forEach((item) => {
-    item.addEventListener("click", () => {
+if (menuToggle && navLinks) {
+    const closeMenu = () => {
         navLinks.classList.remove("active");
         menuToggle.textContent = "☰";
         menuToggle.setAttribute("aria-label", "Ouvrir le menu");
+        menuToggle.setAttribute("aria-expanded", "false");
+    };
+
+    menuToggle.addEventListener("click", () => {
+        const isOpen = navLinks.classList.toggle("active");
+        menuToggle.textContent = isOpen ? "✕" : "☰";
+        menuToggle.setAttribute("aria-label", isOpen ? "Fermer le menu" : "Ouvrir le menu");
+        menuToggle.setAttribute("aria-expanded", String(isOpen));
     });
-});
 
-// ANNÉE AUTOMATIQUE DANS LE FOOTER
+    navLinks.querySelectorAll("a").forEach((item) => {
+        item.addEventListener("click", closeMenu);
+    });
 
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeMenu();
+    });
+}
+
+// ANNÉE AUTOMATIQUE DANS LE PIED DE PAGE
 const yearElement = document.getElementById("year");
+if (yearElement) {
+    yearElement.textContent = new Date().getFullYear();
+}
 
-yearElement.textContent = new Date().getFullYear();
+// ANIMATIONS D'APPARITION, AVEC SOLUTION DE REPLI
+const revealElements = document.querySelectorAll(".section, .hero-card");
 
-// ANIMATION D'APPARITION DES SECTIONS
+if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries, currentObserver) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                currentObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12 });
 
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            observer.unobserve(entry.target);
-        }
+    revealElements.forEach((element) => {
+        element.classList.add("reveal");
+        observer.observe(element);
     });
-}, {
-    threshold: 0.15
-});
-
-document.querySelectorAll(".section, .hero-card").forEach((element) => {
-    element.classList.add("reveal");
-    observer.observe(element);
-});
+} else {
+    revealElements.forEach((element) => element.classList.add("visible"));
+}
