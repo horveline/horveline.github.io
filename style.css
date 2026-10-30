@@ -535,3 +535,58 @@ footer p + p {
         font-size: 35px;
     }
 }
+
+
+/* FINITIONS VISUELLES ET ACCESSIBILITÉ */
+:focus-visible {
+    outline: 3px solid #60a5fa;
+    outline-offset: 4px;
+}
+
+.hero {
+    position: relative;
+}
+
+.hero-card {
+    border: 1px solid rgba(37, 99, 235, 0.08);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.hero-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 22px 55px rgba(15, 23, 42, 0.12);
+}
+
+.skill-card,
+.project-card,
+.timeline-content,
+.about-info {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .reveal {
+        opacity: 1;
+        transform: none;
+    }
+}
